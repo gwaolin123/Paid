@@ -1,7 +1,7 @@
--- ARSENAL PAID VERSION - WORKING GUI (SAME AS BLOX FRUITS)
+-- ARSENAL PAID VERSION - SAME GUI AS FREE VERSION (WORKING)
 -- Password: paid_arsenal
 
--- LOGIN GUI
+-- LOGIN GUI (SAME AS FREE VERSION)
 local loginGui = Instance.new("ScreenGui")
 loginGui.Name = "LoginGUI"
 loginGui.Parent = game:GetService("CoreGui")
@@ -49,7 +49,7 @@ errorText.Parent = loginFrame
 local function loadMainScript()
     loginGui:Destroy()
     
-    -- MAIN SCRIPT START
+    -- MAIN SCRIPT (SAME STRUCTURE AS FREE VERSION)
     local Players = game:GetService("Players")
     local RunService = game:GetService("RunService")
     local UserInputService = game:GetService("UserInputService")
@@ -60,16 +60,15 @@ local function loadMainScript()
     -- SETTINGS (ALL OFF BY DEFAULT)
     local espEnabled = true
     local aimbotEnabled = false
-    local silentAimEnabled = false
     local flyEnabled = false
     local speedEnabled = false
     local speedValue = 45
     local antiAimEnabled = false
     local bulletDodgeEnabled = false
+    local silentAimEnabled = false
     local autoFireEnabled = false
     local triggerBotEnabled = false
     local wallBangEnabled = false
-    local bulletProofEnabled = false
     local rapidFireEnabled = false
     local instantReloadEnabled = false
 
@@ -88,15 +87,15 @@ local function loadMainScript()
     end
     boostFPS()
 
-    -- GUI
+    -- GUI (SAME AS FREE VERSION)
     local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "ArsenalPaidGUI"
+    screenGui.Name = "ArsenalGUI"
     screenGui.Parent = game:GetService("CoreGui")
     screenGui.ResetOnSpawn = false
 
     local mainFrame = Instance.new("Frame")
-    mainFrame.Size = UDim2.new(0, 200, 0, 500)
-    mainFrame.Position = UDim2.new(0.1, 0, 0.2, 0)
+    mainFrame.Size = UDim2.new(0, 200, 0, 420)
+    mainFrame.Position = UDim2.new(0.1, 0, 0.3, 0)
     mainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
     mainFrame.BackgroundTransparency = 0.3
     mainFrame.BorderSizePixel = 2
@@ -132,28 +131,26 @@ local function loadMainScript()
     local function createButton(name, y, text)
         local btn = Instance.new("TextButton")
         btn.Name = name
-        btn.Size = UDim2.new(0, 170, 0, 32)
+        btn.Size = UDim2.new(0, 170, 0, 35)
         btn.Position = UDim2.new(0, 15, 0, y)
         btn.Text = text
         btn.BackgroundColor3 = Color3.new(0.6, 0.2, 0.2)
-        btn.TextColor3 = Color3.new(1, 1, 1)
         btn.Parent = mainFrame
         return btn
     end
 
     local espBtn = createButton("EspBtn", 35, "ESP: ON")
-    local aimBtn = createButton("AimBtn", 70, "AIMBOT: OFF")
-    local silentBtn = createButton("SilentBtn", 105, "SILENT AIM: OFF")
-    local flyBtn = createButton("FlyBtn", 140, "FLY: OFF")
-    local speedBtn = createButton("SpeedBtn", 175, "SPEED: OFF")
-    local antiBtn = createButton("AntiBtn", 210, "ANTI-AIM: OFF")
-    local dodgeBtn = createButton("DodgeBtn", 245, "BULLET DODGE: OFF")
-    local autoFireBtn = createButton("AutoFireBtn", 280, "AUTO FIRE: OFF")
-    local triggerBtn = createButton("TriggerBtn", 315, "TRIGGER BOT: OFF")
-    local wallBangBtn = createButton("WallBangBtn", 350, "WALL BANG: OFF")
-    local bulletProofBtn = createButton("BulletProofBtn", 385, "BULLET PROOF: OFF")
-    local rapidFireBtn = createButton("RapidFireBtn", 420, "RAPID FIRE: OFF")
-    local instantReloadBtn = createButton("InstantReloadBtn", 455, "INSTANT RELOAD: OFF")
+    local aimBtn = createButton("AimBtn", 75, "AIMBOT: OFF")
+    local silentBtn = createButton("SilentBtn", 115, "SILENT AIM: OFF")
+    local flyBtn = createButton("FlyBtn", 155, "FLY: OFF")
+    local speedBtn = createButton("SpeedBtn", 195, "SPEED: OFF")
+    local antiBtn = createButton("AntiBtn", 235, "ANTI-AIM: OFF")
+    local dodgeBtn = createButton("DodgeBtn", 275, "BULLET DODGE: OFF")
+    local autoFireBtn = createButton("AutoFireBtn", 315, "AUTO FIRE: OFF")
+    local triggerBtn = createButton("TriggerBtn", 355, "TRIGGER BOT: OFF")
+    local wallBangBtn = createButton("WallBangBtn", 395, "WALL BANG: OFF")
+    local rapidFireBtn = createButton("RapidFireBtn", 435, "RAPID FIRE: OFF")
+    local instantReloadBtn = createButton("InstantReloadBtn", 475, "INSTANT RELOAD: OFF")
 
     espBtn.BackgroundColor3 = Color3.new(0.2, 0.8, 0.2)
 
@@ -166,7 +163,7 @@ local function loadMainScript()
         return true
     end
 
-    -- VISIBILITY CHECK (OPEN AREA ONLY)
+    -- VISIBILITY CHECK (WITH WALL BANG)
     local function isVisible(enemy)
         if wallBangEnabled then return true end
         local char = enemy.Character
@@ -220,7 +217,7 @@ local function loadMainScript()
         end
     end
 
-    -- AIMBOT
+    -- AIMBOT (ONLY VISIBLE ENEMIES)
     local function getClosestVisibleEnemy()
         local closest = nil
         local shortestDist = 200
@@ -281,7 +278,7 @@ local function loadMainScript()
         end
     end
 
-    -- RAPID FIRE (shoots faster than normal)
+    -- RAPID FIRE
     local function rapidFire()
         if not rapidFireEnabled then return end
         if aimbotEnabled then
@@ -300,17 +297,8 @@ local function loadMainScript()
         pcall(function()
             local tool = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildWhichIsA("Tool")
             if tool and tool:FindFirstChild("Ammo") then
-                tool.Ammo.Value = tool:GetAttribute("MaxAmmo") or 999
+                tool.Ammo.Value = 999
             end
-        end)
-    end
-
-    -- BULLET PROOF (reduces damage taken)
-    local function bulletProof()
-        if not bulletProofEnabled then return end
-        pcall(function()
-            LocalPlayer.Character.Humanoid.Health = 9999
-            LocalPlayer.Character.Humanoid.MaxHealth = 9999
         end)
     end
 
@@ -413,7 +401,6 @@ local function loadMainScript()
         triggerBot()
         rapidFire()
         instantReload()
-        bulletProof()
         setSpeed()
         antiAim()
         bulletDodge()
@@ -425,7 +412,9 @@ local function loadMainScript()
         espBtn.Text = espEnabled and "ESP: ON" or "ESP: OFF"
         espBtn.BackgroundColor3 = espEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
         if not espEnabled then
-            for _, label in pairs(espLabels) do if label then label.Visible = false end end
+            for _, label in pairs(espLabels) do
+                if label then label.Visible = false end
+            end
         end
     end)
 
@@ -485,12 +474,6 @@ local function loadMainScript()
         wallBangBtn.BackgroundColor3 = wallBangEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
     end)
 
-    bulletProofBtn.Activated:Connect(function()
-        bulletProofEnabled = not bulletProofEnabled
-        bulletProofBtn.Text = bulletProofEnabled and "BULLET PROOF: ON" or "BULLET PROOF: OFF"
-        bulletProofBtn.BackgroundColor3 = bulletProofEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
-    end)
-
     rapidFireBtn.Activated:Connect(function()
         rapidFireEnabled = not rapidFireEnabled
         rapidFireBtn.Text = rapidFireEnabled and "RAPID FIRE: ON" or "RAPID FIRE: OFF"
@@ -499,4 +482,26 @@ local function loadMainScript()
 
     instantReloadBtn.Activated:Connect(function()
         instantReloadEnabled = not instantReloadEnabled
-        instantReloadBtn.Text = instantReloadEnabled
+        instantReloadBtn.Text = instantReloadEnabled and "INSTANT RELOAD: ON" or "INSTANT RELOAD: OFF"
+        instantReloadBtn.BackgroundColor3 = instantReloadEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+    end)
+
+    -- HIDE/SHOW
+    hideBtn.Activated:Connect(function()
+        mainFrame.Visible = false
+        floatingCircle.Visible = true
+    end)
+
+    floatingCircle.Activated:Connect(function()
+        mainFrame.Visible = true
+        floatingCircle.Visible = false
+    end)
+
+    -- DRAG
+    local dragStart, frameStart, isDragging
+    mainFrame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            isDragging = true
+            dragStart = input.Position
+            frameStart = mainFrame.Position
+     
