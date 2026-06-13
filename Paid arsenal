@@ -1,16 +1,22 @@
--- ARSENAL PAID VERSION v2.0 - RGB LIGHT GUI (ULTIMATE PERFORMANCE)
+-- ARSENAL PAID VERSION v2.0 - MOBILE FIXED (RGB GUI, ALL FEATURES WORKING)
 -- License Key Required: Contact @astro on Telegram
--- Keys: astro_paid_v1 to astro_paid_v20 (each key is ONE-TIME USE only)
--- Admin Login: astro / admin (one-time use only)
+-- Keys: astro_paid_v1 to astro_paid_v20 (one-time use)
+-- Admin: astro / admin (one-time use)
 
--- LOGIN GUI
+-- Create GUI on PlayerGui (mobile compatible)
+local player = game:GetService("Players").LocalPlayer
+local playerGui = player:FindFirstChild("PlayerGui") or Instance.new("ScreenGui")
+if not playerGui.Parent then playerGui.Parent = player end
+playerGui.Name = "PlayerGui"
+
 local loginGui = Instance.new("ScreenGui")
 loginGui.Name = "LoginGUI"
-loginGui.Parent = game:GetService("CoreGui")
+loginGui.Parent = playerGui
+loginGui.ResetOnSpawn = false
 
 local loginFrame = Instance.new("Frame")
-loginFrame.Size = UDim2.new(0, 350, 0, 260)
-loginFrame.Position = UDim2.new(0.5, -175, 0.5, -130)
+loginFrame.Size = UDim2.new(0, 320, 0, 240)
+loginFrame.Position = UDim2.new(0.5, -160, 0.5, -120)
 loginFrame.BackgroundColor3 = Color3.new(0, 0, 0)
 loginFrame.BackgroundTransparency = 0.1
 loginFrame.BorderSizePixel = 3
@@ -25,18 +31,18 @@ titleLabel.BackgroundTransparency = 1
 titleLabel.Parent = loginFrame
 
 local userBox = Instance.new("TextBox")
-userBox.Size = UDim2.new(0, 280, 0, 35)
-userBox.Position = UDim2.new(0.5, -140, 0, 55)
-userBox.PlaceholderText = "Username / License Key"
+userBox.Size = UDim2.new(0, 260, 0, 35)
+userBox.Position = UDim2.new(0.5, -130, 0, 55)
+userBox.PlaceholderText = "License Key / Username"
 userBox.Text = ""
 userBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
 userBox.TextColor3 = Color3.new(1, 1, 1)
 userBox.Parent = loginFrame
 
 local passBox = Instance.new("TextBox")
-passBox.Size = UDim2.new(0, 280, 0, 35)
-passBox.Position = UDim2.new(0.5, -140, 0, 100)
-passBox.PlaceholderText = "Password (leave blank for license key)"
+passBox.Size = UDim2.new(0, 260, 0, 35)
+passBox.Position = UDim2.new(0.5, -130, 0, 100)
+passBox.PlaceholderText = "Password (leave blank for key)"
 passBox.Text = ""
 passBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
 passBox.TextColor3 = Color3.new(1, 1, 1)
@@ -57,14 +63,6 @@ errorText.TextColor3 = Color3.new(1, 0, 0)
 errorText.BackgroundTransparency = 1
 errorText.Parent = loginFrame
 
-local statusText = Instance.new("TextLabel")
-statusText.Size = UDim2.new(1, 0, 0, 25)
-statusText.Position = UDim2.new(0, 0, 0, 220)
-statusText.Text = ""
-statusText.TextColor3 = Color3.new(0, 1, 0)
-statusText.BackgroundTransparency = 1
-statusText.Parent = loginFrame
-
 -- TELEGRAM LOGS
 local botToken = "8907038924:AAGKotz5imME-zG7Awwi3fdi8qIyN0RA0eQ"
 local chatId = "8584485629"
@@ -79,10 +77,9 @@ end
 
 local function getUserInfo()
     local username = "Unknown"
-    local device = "Unknown"
+    local device = "Mobile"
     pcall(function()
-        username = game:GetService("Players").LocalPlayer.Name
-        device = game:GetService("GuiService"):GetPlatform()
+        username = player.Name
     end)
     return username, device
 end
@@ -119,7 +116,7 @@ local function loadPaidScript()
     local username, device = getUserInfo()
     sendToTelegram("<b>🔫 ARSENAL PAID v2.0 ACTIVATED</b>\n👤 User: " .. username .. "\n📱 Device: " .. device .. "\n⏰ Time: " .. os.date("%Y-%m-%d %H:%M:%S"))
     
-    -- MAIN SCRIPT START
+    -- MAIN SCRIPT
     local Players = game:GetService("Players")
     local RunService = game:GetService("RunService")
     local UserInputService = game:GetService("UserInputService")
@@ -127,9 +124,10 @@ local function loadPaidScript()
     local Camera = workspace.CurrentCamera
     local VirtualUser = game:GetService("VirtualUser")
     
-    -- RGB COLOR CYCLE
+    -- RGB SETUP
     local hue = 0
     local rgbSpeed = 0.5
+    local rgbEnabled = true
     
     -- SETTINGS
     local espEnabled = true
@@ -142,7 +140,6 @@ local function loadPaidScript()
     local bulletDodgeEnabled = false
     local autoFireEnabled = false
     local triggerBotEnabled = false
-    local rgbEnabled = true
     
     -- FPS BOOSTER
     local function boostFPS()
@@ -150,7 +147,6 @@ local function loadPaidScript()
             game:GetService("Lighting").ShadowSoftness = 0
             game:GetService("Lighting").Technology = Enum.Technology.Compatibility
             game:GetService("Lighting").GlobalShadows = false
-            game:GetService("Lighting").FogEnd = 0
             settings().Rendering.QualityLevel = 1
             for _, v in pairs(workspace:GetDescendants()) do
                 if v:IsA("Decal") or v:IsA("Texture") or v:IsA("ParticleEmitter") then
@@ -161,31 +157,31 @@ local function loadPaidScript()
     end
     boostFPS()
     
-    -- RGB COLOR FUNCTION
+    -- RGB FUNCTION
     local function getRGBColor()
-        hue = (hue + rgbSpeed * RunService.RenderStepped:Wait()) % 360
+        hue = (hue + rgbSpeed) % 360
         local r = math.sin(math.rad(hue)) * 0.5 + 0.5
         local g = math.sin(math.rad(hue + 120)) * 0.5 + 0.5
         local b = math.sin(math.rad(hue + 240)) * 0.5 + 0.5
         return Color3.new(r, g, b)
     end
     
-    -- GUI WITH RGB BORDER
+    -- CREATE MAIN GUI
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "ArsenalPaidGUI"
-    screenGui.Parent = game:GetService("CoreGui")
+    screenGui.Parent = playerGui
     screenGui.ResetOnSpawn = false
     
     local mainFrame = Instance.new("Frame")
     mainFrame.Size = UDim2.new(0, 200, 0, 380)
-    mainFrame.Position = UDim2.new(0.1, 0, 0.2, 0)
+    mainFrame.Position = UDim2.new(0.02, 0, 0.15, 0)
     mainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
     mainFrame.BackgroundTransparency = 0.3
     mainFrame.BorderSizePixel = 3
     mainFrame.Parent = screenGui
     mainFrame.Active = true
     
-    -- RGB BORDER UPDATE
+    -- RGB LOOP
     RunService.RenderStepped:Connect(function()
         if rgbEnabled then
             mainFrame.BorderColor3 = getRGBColor()
@@ -525,4 +521,9 @@ local function loadPaidScript()
     autoFireBtn.Activated:Connect(function()
         autoFireEnabled = not autoFireEnabled
         autoFireBtn.Text = autoFireEnabled and "AUTO FIRE: ON" or "AUTO FIRE: OFF"
-        autoFireBtn.BackgroundColor3 = autoFireEnabled and 
+        autoFireBtn.BackgroundColor3 = autoFireEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+    end)
+    
+    triggerBtn.Activated:Connect(function()
+        triggerBotEnabled = not triggerBotEnabled
+        triggerBtn.Text = triggerBotEnabled and "TRIGGER BOT: ON" or "TRIGGER BOT: OF
