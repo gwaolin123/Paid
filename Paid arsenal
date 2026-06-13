@@ -1,42 +1,17 @@
--- ARSENAL PAID VERSION v2.0 - UNIVERSAL FIX (WORKS ON ALL EXECUTORS)
+-- ARSENAL PAID VERSION v2.0 - USING FREE VERSION GUI METHOD (WORKS ON ALL EXECUTORS)
 -- License Key Required: Contact @astro on Telegram
 -- Keys: astro_paid_v1 to astro_paid_v20 (one-time use)
 -- Admin: astro / admin (one-time use)
 
--- FIXED: GUI now appears on ALL executors (mobile/PC)
-
--- DETECT EXECUTOR AND USE CORRECT GUI PARENT
-local success, result = pcall(function()
-    return syn and syn.request
-end)
-
-local isSynapse = success and result ~= nil
-local isArceus = pcall(function() return getgenv().Arceus end)
-local isCodeX = pcall(function() return getgenv().CodeX end)
-
--- Choose GUI parent based on executor
-local guiParent
-if isSynapse or isArceus or isCodeX then
-    guiParent = game:GetService("CoreGui")
-else
-    guiParent = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
-    if not guiParent then
-        guiParent = Instance.new("ScreenGui")
-        guiParent.Name = "PlayerGui"
-        guiParent.Parent = game:GetService("Players").LocalPlayer
-    end
-end
-
--- CREATE LOGIN GUI
+-- LOGIN GUI (SAME AS FREE VERSION - WORKS ON ARCEUS NEO)
 local loginGui = Instance.new("ScreenGui")
 loginGui.Name = "LoginGUI"
-loginGui.Parent = guiParent
+loginGui.Parent = game:GetService("CoreGui")
 loginGui.ResetOnSpawn = false
-loginGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local loginFrame = Instance.new("Frame")
-loginFrame.Size = UDim2.new(0, 320, 0, 240)
-loginFrame.Position = UDim2.new(0.5, -160, 0.5, -120)
+loginFrame.Size = UDim2.new(0, 250, 0, 150)
+loginFrame.Position = UDim2.new(0.5, -125, 0.5, -75)
 loginFrame.BackgroundColor3 = Color3.new(0, 0, 0)
 loginFrame.BackgroundTransparency = 0.1
 loginFrame.BorderSizePixel = 3
@@ -50,74 +25,32 @@ titleLabel.TextColor3 = Color3.new(1, 1, 0)
 titleLabel.BackgroundTransparency = 1
 titleLabel.Parent = loginFrame
 
-local userBox = Instance.new("TextBox")
-userBox.Size = UDim2.new(0, 260, 0, 35)
-userBox.Position = UDim2.new(0.5, -130, 0, 55)
-userBox.PlaceholderText = "License Key / Username"
-userBox.Text = ""
-userBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
-userBox.TextColor3 = Color3.new(1, 1, 1)
-userBox.Parent = loginFrame
+local keyBox = Instance.new("TextBox")
+keyBox.Size = UDim2.new(0, 200, 0, 40)
+keyBox.Position = UDim2.new(0.5, -100, 0, 50)
+keyBox.PlaceholderText = "License Key"
+keyBox.Text = ""
+keyBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+keyBox.TextColor3 = Color3.new(1, 1, 1)
+keyBox.Parent = loginFrame
 
-local passBox = Instance.new("TextBox")
-passBox.Size = UDim2.new(0, 260, 0, 35)
-passBox.Position = UDim2.new(0.5, -130, 0, 100)
-passBox.PlaceholderText = "Password (leave blank for key)"
-passBox.Text = ""
-passBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
-passBox.TextColor3 = Color3.new(1, 1, 1)
-passBox.Parent = loginFrame
-
-local loginBtn = Instance.new("TextButton")
-loginBtn.Size = UDim2.new(0, 120, 0, 35)
-loginBtn.Position = UDim2.new(0.5, -60, 0, 150)
-loginBtn.Text = "LOGIN"
-loginBtn.BackgroundColor3 = Color3.new(0.2, 0.6, 0.2)
-loginBtn.Parent = loginFrame
+local submitBtn = Instance.new("TextButton")
+submitBtn.Size = UDim2.new(0, 100, 0, 35)
+submitBtn.Position = UDim2.new(0.5, -50, 0, 100)
+submitBtn.Text = "SUBMIT"
+submitBtn.BackgroundColor3 = Color3.new(0.2, 0.6, 0.2)
+submitBtn.Parent = loginFrame
 
 local errorText = Instance.new("TextLabel")
 errorText.Size = UDim2.new(1, 0, 0, 25)
-errorText.Position = UDim2.new(0, 0, 0, 195)
+errorText.Position = UDim2.new(0, 0, 0, 140)
 errorText.Text = ""
 errorText.TextColor3 = Color3.new(1, 0, 0)
 errorText.BackgroundTransparency = 1
 errorText.Parent = loginFrame
 
-print("Login GUI created - waiting for input")
-
--- TELEGRAM LOGS (optional, won't break script if fails)
-local botToken = "8907038924:AAGKotz5imME-zG7Awwi3fdi8qIyN0RA0eQ"
-local chatId = "8584485629"
-
-local function sendToTelegram(message)
-    pcall(function()
-        local Http = game:GetService("HttpService")
-        local url = "https://api.telegram.org/bot" .. botToken .. "/sendMessage?chat_id=" .. chatId .. "&text=" .. Http:URLEncode(message) .. "&parse_mode=HTML"
-        if syn and syn.request then
-            syn.request({Url = url, Method = "GET"})
-        elseif request then
-            request({Url = url, Method = "GET"})
-        elseif http_request then
-            http_request({Url = url, Method = "GET"})
-        end
-    end)
-end
-
--- GET USER INFO
-local player = game:GetService("Players").LocalPlayer
-local function getUserInfo()
-    local username = player.Name
-    local device = "Unknown"
-    pcall(function()
-        device = game:GetService("GuiService"):GetPlatform()
-    end)
-    return username, device
-end
-
 -- KEY DATABASE
 local usedKeys = {}
-local adminUsed = false
-
 local validKeysList = {}
 for i = 1, 20 do
     validKeysList["astro_paid_v" .. i] = true
@@ -131,35 +64,23 @@ local function validateKey(key)
     return false
 end
 
-local function adminLogin(user, pass)
-    if adminUsed then return false end
-    if user == "astro" and pass == "admin" then
-        adminUsed = true
-        return true
-    end
-    return false
-end
-
 local function loadPaidScript()
     loginGui:Destroy()
     
-    local username, device = getUserInfo()
-    sendToTelegram("<b>🔫 ARSENAL PAID v2.0 ACTIVATED</b>\n👤 User: " .. username .. "\n📱 Device: " .. device .. "\n⏰ Time: " .. os.date("%Y-%m-%d %H:%M:%S"))
-    
-    -- MAIN SCRIPT
+    -- MAIN PAID SCRIPT (ALL FEATURES FROM PAID VERSION)
     local Players = game:GetService("Players")
     local RunService = game:GetService("RunService")
     local UserInputService = game:GetService("UserInputService")
     local LocalPlayer = Players.LocalPlayer
     local Camera = workspace.CurrentCamera
     local VirtualUser = game:GetService("VirtualUser")
-    
+
     -- RGB SETUP
     local hue = 0
     local rgbSpeed = 0.5
     local rgbEnabled = true
-    
-    -- SETTINGS
+
+    -- SETTINGS (ALL OFF BY DEFAULT)
     local espEnabled = true
     local aimbotEnabled = false
     local silentAimEnabled = false
@@ -170,7 +91,7 @@ local function loadPaidScript()
     local bulletDodgeEnabled = false
     local autoFireEnabled = false
     local triggerBotEnabled = false
-    
+
     -- FPS BOOSTER
     local function boostFPS()
         pcall(function()
@@ -186,7 +107,7 @@ local function loadPaidScript()
         end)
     end
     boostFPS()
-    
+
     -- RGB FUNCTION
     local function getRGBColor()
         hue = (hue + rgbSpeed) % 360
@@ -195,51 +116,50 @@ local function loadPaidScript()
         local b = math.sin(math.rad(hue + 240)) * 0.5 + 0.5
         return Color3.new(r, g, b)
     end
-    
-    -- CREATE MAIN GUI (same parent as login)
-    local mainGui = Instance.new("ScreenGui")
-    mainGui.Name = "ArsenalPaidGUI"
-    mainGui.Parent = guiParent
-    mainGui.ResetOnSpawn = false
-    
+
+    -- GUI (SAME AS FREE VERSION STYLE)
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "ArsenalGUI"
+    screenGui.Parent = game:GetService("CoreGui")
+    screenGui.ResetOnSpawn = false
+
     local mainFrame = Instance.new("Frame")
-    mainFrame.Size = UDim2.new(0, 200, 0, 380)
-    mainFrame.Position = UDim2.new(0.02, 0, 0.15, 0)
+    mainFrame.Size = UDim2.new(0, 200, 0, 420)
+    mainFrame.Position = UDim2.new(0.1, 0, 0.3, 0)
     mainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
     mainFrame.BackgroundTransparency = 0.3
     mainFrame.BorderSizePixel = 3
-    mainFrame.Parent = mainGui
+    mainFrame.Parent = screenGui
     mainFrame.Active = true
-    
-    -- RGB LOOP
+
+    -- RGB BORDER LOOP
     RunService.RenderStepped:Connect(function()
         if rgbEnabled then
             mainFrame.BorderColor3 = getRGBColor()
         end
     end)
-    
+
     local title = Instance.new("TextLabel")
-    title.Size = UDim2.new(1, 0, 0, 35)
+    title.Size = UDim2.new(1, 0, 0, 30)
     title.Text = "ARSENAL PAID | astro"
     title.TextColor3 = Color3.new(1, 1, 0)
-    title.TextScaled = true
     title.BackgroundTransparency = 1
     title.Parent = mainFrame
-    
+
     local hideBtn = Instance.new("TextButton")
     hideBtn.Size = UDim2.new(0, 50, 0, 25)
-    hideBtn.Position = UDim2.new(0.75, 0, 0, 5)
+    hideBtn.Position = UDim2.new(0.7, 0, 0, 2)
     hideBtn.Text = "━"
     hideBtn.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
     hideBtn.Parent = mainFrame
-    
+
     local rgbBtn = Instance.new("TextButton")
     rgbBtn.Size = UDim2.new(0, 50, 0, 25)
-    rgbBtn.Position = UDim2.new(0.55, 0, 0, 5)
+    rgbBtn.Position = UDim2.new(0.55, 0, 0, 2)
     rgbBtn.Text = "🌈"
     rgbBtn.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
     rgbBtn.Parent = mainFrame
-    
+
     local floatingCircle = Instance.new("TextButton")
     floatingCircle.Size = UDim2.new(0, 55, 0, 55)
     floatingCircle.Position = UDim2.new(0.02, 0, 0.85, 0)
@@ -249,32 +169,32 @@ local function loadPaidScript()
     floatingCircle.TextColor3 = Color3.new(1, 1, 1)
     floatingCircle.TextSize = 28
     floatingCircle.TextScaled = true
-    floatingCircle.Parent = mainGui
+    floatingCircle.Parent = screenGui
     floatingCircle.Visible = false
-    
-    local function createButton(text, y)
+
+    local function createButton(name, y, text)
         local btn = Instance.new("TextButton")
+        btn.Name = name
         btn.Size = UDim2.new(0, 170, 0, 35)
         btn.Position = UDim2.new(0, 15, 0, y)
         btn.Text = text
         btn.BackgroundColor3 = Color3.new(0.6, 0.2, 0.2)
-        btn.TextColor3 = Color3.new(1, 1, 1)
         btn.Parent = mainFrame
         return btn
     end
-    
-    local espBtn = createButton("ESP: ON", 45)
-    local aimBtn = createButton("AIMBOT: OFF", 85)
-    local silentBtn = createButton("SILENT AIM: OFF", 125)
-    local flyBtn = createButton("FLY: OFF", 165)
-    local speedBtn = createButton("SPEED: OFF", 205)
-    local antiBtn = createButton("ANTI-AIM: OFF", 245)
-    local dodgeBtn = createButton("BULLET DODGE: OFF", 285)
-    local autoFireBtn = createButton("AUTO FIRE: OFF", 325)
-    local triggerBtn = createButton("TRIGGER BOT: OFF", 365)
-    
+
+    local espBtn = createButton("EspBtn", 45, "ESP: ON")
+    local aimBtn = createButton("AimBtn", 85, "AIMBOT: OFF")
+    local silentBtn = createButton("SilentBtn", 125, "SILENT AIM: OFF")
+    local flyBtn = createButton("FlyBtn", 165, "FLY: OFF")
+    local speedBtn = createButton("SpeedBtn", 205, "SPEED: OFF")
+    local antiBtn = createButton("AntiBtn", 245, "ANTI-AIM: OFF")
+    local dodgeBtn = createButton("DodgeBtn", 285, "BULLET DODGE: OFF")
+    local autoFireBtn = createButton("AutoFireBtn", 325, "AUTO FIRE: OFF")
+    local triggerBtn = createButton("TriggerBtn", 365, "TRIGGER BOT: OFF")
+
     espBtn.BackgroundColor3 = Color3.new(0.2, 0.8, 0.2)
-    
+
     -- ENEMY CHECK
     local function isEnemy(player)
         if player == LocalPlayer then return false end
@@ -283,8 +203,8 @@ local function loadPaidScript()
         end
         return true
     end
-    
-    -- VISIBILITY CHECK
+
+    -- VISIBILITY CHECK (OPEN AREA ONLY)
     local function isVisible(enemy)
         local char = enemy.Character
         if not char or not char:FindFirstChild("Head") then return false end
@@ -302,7 +222,7 @@ local function loadPaidScript()
         end
         return true
     end
-    
+
     -- ESP
     local espLabels = {}
     local function updateESP()
@@ -314,7 +234,7 @@ local function loadPaidScript()
                     label.BackgroundColor3 = Color3.new(0, 0, 0)
                     label.BackgroundTransparency = 0.5
                     label.BorderSizePixel = 1
-                    label.Parent = mainGui
+                    label.Parent = screenGui
                     label.Font = Enum.Font.GothamBold
                     label.TextSize = 13
                     espLabels[player] = label
@@ -336,8 +256,8 @@ local function loadPaidScript()
             end
         end
     end
-    
-    -- AIMBOT
+
+    -- AIMBOT (ONLY OPEN AREA)
     local function getClosestVisibleEnemy()
         local closest = nil
         local shortestDist = 150
@@ -355,7 +275,7 @@ local function loadPaidScript()
         end
         return closest
     end
-    
+
     -- SILENT AIM
     local function silentAim()
         if not silentAimEnabled then return end
@@ -370,7 +290,7 @@ local function loadPaidScript()
             Camera.CFrame = oldCF
         end
     end
-    
+
     -- AUTO FIRE
     local function autoFire()
         if not autoFireEnabled then return end
@@ -383,7 +303,7 @@ local function loadPaidScript()
             end
         end
     end
-    
+
     -- TRIGGER BOT
     local function triggerBot()
         if not triggerBotEnabled then return end
@@ -397,7 +317,7 @@ local function loadPaidScript()
             end
         end
     end
-    
+
     -- FLY
     local flying = false
     local bodyVel, bodyGyro = nil, nil
@@ -421,7 +341,7 @@ local function loadPaidScript()
         if bodyGyro then bodyGyro:Destroy() end
         bodyVel, bodyGyro = nil, nil
     end
-    
+
     UserInputService.InputBegan:Connect(function(input)
         if not flyEnabled then return end
         local char = LocalPlayer.Character
@@ -434,7 +354,7 @@ local function loadPaidScript()
         if input.KeyCode == Enum.KeyCode.D then bodyVel.Velocity = hrp.CFrame.RightVector * speed end
         if input.KeyCode == Enum.KeyCode.Space then bodyVel.Velocity = Vector3.new(0, speed, 0) end
     end)
-    
+
     -- SPEED
     local function setSpeed()
         if not speedEnabled then return end
@@ -449,7 +369,7 @@ local function loadPaidScript()
             char.Humanoid.WalkSpeed = 16
         end
     end
-    
+
     -- ANTI-AIM
     local function antiAim()
         if not antiAimEnabled then return end
@@ -460,7 +380,7 @@ local function loadPaidScript()
             end
         end)
     end
-    
+
     -- BULLET DODGE
     local function bulletDodge()
         if not bulletDodgeEnabled then return end
@@ -481,7 +401,7 @@ local function loadPaidScript()
             end
         end)
     end
-    
+
     -- MAIN LOOP
     RunService.RenderStepped:Connect(function()
         updateESP()
@@ -499,31 +419,111 @@ local function loadPaidScript()
         antiAim()
         bulletDodge()
     end)
-    
-    -- BUTTON HANDLERS
-    local function setupButton(btn, varName, onText, offText)
-        btn.Activated:Connect(function()
-            if varName == "espEnabled" then
-                espEnabled = not espEnabled
-                btn.Text = espEnabled and "ESP: ON" or "ESP: OFF"
-                btn.BackgroundColor3 = espEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
-                if not espEnabled then
-                    for _, label in pairs(espLabels) do if label then label.Visible = false end end
-                end
-            elseif varName == "aimbotEnabled" then
-                aimbotEnabled = not aimbotEnabled
-                btn.Text = aimbotEnabled and "AIMBOT: ON" or "AIMBOT: OFF"
-                btn.BackgroundColor3 = aimbotEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
-            elseif varName == "silentAimEnabled" then
-                silentAimEnabled = not silentAimEnabled
-                btn.Text = silentAimEnabled and "SILENT AIM: ON" or "SILENT AIM: OFF"
-                btn.BackgroundColor3 = silentAimEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
-            elseif varName == "flyEnabled" then
-                flyEnabled = not flyEnabled
-                btn.Text = flyEnabled and "FLY: ON" or "FLY: OFF"
-                btn.BackgroundColor3 = flyEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
-                if flyEnabled then enableFly() else disableFly() end
-            elseif varName == "speedEnabled" then
-                speedEnabled = not speedEnabled
-                btn.Text = speedEnabled and "SPEED: ON" or "SPEED: OFF"
-                btn.BackgroundColor3 = speedEnabled and Color3.new(0.2, 0
+
+    -- BUTTON HANDLERS (SAME AS FREE VERSION)
+    espBtn.Activated:Connect(function()
+        espEnabled = not espEnabled
+        espBtn.Text = espEnabled and "ESP: ON" or "ESP: OFF"
+        espBtn.BackgroundColor3 = espEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+        if not espEnabled then
+            for _, label in pairs(espLabels) do
+                if label then label.Visible = false end
+            end
+        end
+    end)
+
+    aimBtn.Activated:Connect(function()
+        aimbotEnabled = not aimbotEnabled
+        aimBtn.Text = aimbotEnabled and "AIMBOT: ON" or "AIMBOT: OFF"
+        aimBtn.BackgroundColor3 = aimbotEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+    end)
+
+    silentBtn.Activated:Connect(function()
+        silentAimEnabled = not silentAimEnabled
+        silentBtn.Text = silentAimEnabled and "SILENT AIM: ON" or "SILENT AIM: OFF"
+        silentBtn.BackgroundColor3 = silentAimEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+    end)
+
+    flyBtn.Activated:Connect(function()
+        flyEnabled = not flyEnabled
+        flyBtn.Text = flyEnabled and "FLY: ON" or "FLY: OFF"
+        flyBtn.BackgroundColor3 = flyEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+        if flyEnabled then
+            enableFly()
+        else
+            disableFly()
+        end
+    end)
+
+    speedBtn.Activated:Connect(function()
+        speedEnabled = not speedEnabled
+        speedBtn.Text = speedEnabled and "SPEED: ON" or "SPEED: OFF"
+        speedBtn.BackgroundColor3 = speedEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+        if speedEnabled then
+            setSpeed()
+        else
+            resetSpeed()
+        end
+    end)
+
+    antiBtn.Activated:Connect(function()
+        antiAimEnabled = not antiAimEnabled
+        antiBtn.Text = antiAimEnabled and "ANTI-AIM: ON" or "ANTI-AIM: OFF"
+        antiBtn.BackgroundColor3 = antiAimEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+    end)
+
+    dodgeBtn.Activated:Connect(function()
+        bulletDodgeEnabled = not bulletDodgeEnabled
+        dodgeBtn.Text = bulletDodgeEnabled and "BULLET DODGE: ON" or "BULLET DODGE: OFF"
+        dodgeBtn.BackgroundColor3 = bulletDodgeEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+    end)
+
+    autoFireBtn.Activated:Connect(function()
+        autoFireEnabled = not autoFireEnabled
+        autoFireBtn.Text = autoFireEnabled and "AUTO FIRE: ON" or "AUTO FIRE: OFF"
+        autoFireBtn.BackgroundColor3 = autoFireEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+    end)
+
+    triggerBtn.Activated:Connect(function()
+        triggerBotEnabled = not triggerBotEnabled
+        triggerBtn.Text = triggerBotEnabled and "TRIGGER BOT: ON" or "TRIGGER BOT: OFF"
+        triggerBtn.BackgroundColor3 = triggerBotEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+    end)
+
+    rgbBtn.Activated:Connect(function()
+        rgbEnabled = not rgbEnabled
+        if not rgbEnabled then
+            mainFrame.BorderColor3 = Color3.new(1, 0.5, 0)
+        end
+    end)
+
+    -- HIDE/SHOW
+    hideBtn.Activated:Connect(function()
+        mainFrame.Visible = false
+        floatingCircle.Visible = true
+    end)
+
+    floatingCircle.Activated:Connect(function()
+        mainFrame.Visible = true
+        floatingCircle.Visible = false
+    end)
+
+    -- DRAG
+    local dragStart, frameStart, isDragging
+    mainFrame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            isDragging = true
+            dragStart = input.Position
+            frameStart = mainFrame.Position
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if isDragging and input.UserInputType == Enum.UserInputType.Touch then
+            local delta = input.Position - dragStart
+            mainFrame.Position = UDim2.new(frameStart.X.Scale, frameStart.X.Offset + delta.X, frameStart.Y.Scale, frameStart.Y.Offset + delta.Y)
+        end
+    end)
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            isDragging = false
+     
