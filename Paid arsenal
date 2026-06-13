@@ -1,13 +1,10 @@
--- ARSENAL PAID VERSION v2.0 - USING FREE VERSION GUI METHOD (WORKS ON ALL EXECUTORS)
--- License Key Required: Contact @astro on Telegram
--- Keys: astro_paid_v1 to astro_paid_v20 (one-time use)
--- Admin: astro / admin (one-time use)
+-- ARSENAL PAID v2.0 - EXACT FREE VERSION STRUCTURE (NO TELEGRAM, NO EXTRA)
+-- Password: astro (same as free)
 
--- LOGIN GUI (SAME AS FREE VERSION - WORKS ON ARCEUS NEO)
+-- LOGIN GUI (IDENTICAL TO FREE VERSION)
 local loginGui = Instance.new("ScreenGui")
 loginGui.Name = "LoginGUI"
 loginGui.Parent = game:GetService("CoreGui")
-loginGui.ResetOnSpawn = false
 
 local loginFrame = Instance.new("Frame")
 loginFrame.Size = UDim2.new(0, 250, 0, 150)
@@ -25,14 +22,14 @@ titleLabel.TextColor3 = Color3.new(1, 1, 0)
 titleLabel.BackgroundTransparency = 1
 titleLabel.Parent = loginFrame
 
-local keyBox = Instance.new("TextBox")
-keyBox.Size = UDim2.new(0, 200, 0, 40)
-keyBox.Position = UDim2.new(0.5, -100, 0, 50)
-keyBox.PlaceholderText = "License Key"
-keyBox.Text = ""
-keyBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
-keyBox.TextColor3 = Color3.new(1, 1, 1)
-keyBox.Parent = loginFrame
+local passwordBox = Instance.new("TextBox")
+passwordBox.Size = UDim2.new(0, 200, 0, 40)
+passwordBox.Position = UDim2.new(0.5, -100, 0, 50)
+passwordBox.PlaceholderText = "Password"
+passwordBox.Text = ""
+passwordBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+passwordBox.TextColor3 = Color3.new(1, 1, 1)
+passwordBox.Parent = loginFrame
 
 local submitBtn = Instance.new("TextButton")
 submitBtn.Size = UDim2.new(0, 100, 0, 35)
@@ -49,25 +46,10 @@ errorText.TextColor3 = Color3.new(1, 0, 0)
 errorText.BackgroundTransparency = 1
 errorText.Parent = loginFrame
 
--- KEY DATABASE
-local usedKeys = {}
-local validKeysList = {}
-for i = 1, 20 do
-    validKeysList["astro_paid_v" .. i] = true
-end
-
-local function validateKey(key)
-    if validKeysList[key] and not usedKeys[key] then
-        usedKeys[key] = true
-        return true
-    end
-    return false
-end
-
-local function loadPaidScript()
+local function loadMainScript()
     loginGui:Destroy()
     
-    -- MAIN PAID SCRIPT (ALL FEATURES FROM PAID VERSION)
+    -- ========== PAID FEATURES START ==========
     local Players = game:GetService("Players")
     local RunService = game:GetService("RunService")
     local UserInputService = game:GetService("UserInputService")
@@ -75,12 +57,7 @@ local function loadPaidScript()
     local Camera = workspace.CurrentCamera
     local VirtualUser = game:GetService("VirtualUser")
 
-    -- RGB SETUP
-    local hue = 0
-    local rgbSpeed = 0.5
-    local rgbEnabled = true
-
-    -- SETTINGS (ALL OFF BY DEFAULT)
+    -- PAID FEATURES (MORE THAN FREE VERSION)
     local espEnabled = true
     local aimbotEnabled = false
     local silentAimEnabled = false
@@ -91,13 +68,14 @@ local function loadPaidScript()
     local bulletDodgeEnabled = false
     local autoFireEnabled = false
     local triggerBotEnabled = false
+    local rgbEnabled = true
+    local hue = 0
 
     -- FPS BOOSTER
     local function boostFPS()
         pcall(function()
             game:GetService("Lighting").ShadowSoftness = 0
             game:GetService("Lighting").Technology = Enum.Technology.Compatibility
-            game:GetService("Lighting").GlobalShadows = false
             settings().Rendering.QualityLevel = 1
             for _, v in pairs(workspace:GetDescendants()) do
                 if v:IsA("Decal") or v:IsA("Texture") or v:IsA("ParticleEmitter") then
@@ -110,14 +88,14 @@ local function loadPaidScript()
 
     -- RGB FUNCTION
     local function getRGBColor()
-        hue = (hue + rgbSpeed) % 360
+        hue = (hue + 0.5) % 360
         local r = math.sin(math.rad(hue)) * 0.5 + 0.5
         local g = math.sin(math.rad(hue + 120)) * 0.5 + 0.5
         local b = math.sin(math.rad(hue + 240)) * 0.5 + 0.5
         return Color3.new(r, g, b)
     end
 
-    -- GUI (SAME AS FREE VERSION STYLE)
+    -- GUI (SAME AS FREE VERSION)
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "ArsenalGUI"
     screenGui.Parent = game:GetService("CoreGui")
@@ -132,7 +110,7 @@ local function loadPaidScript()
     mainFrame.Parent = screenGui
     mainFrame.Active = true
 
-    -- RGB BORDER LOOP
+    -- RGB BORDER
     RunService.RenderStepped:Connect(function()
         if rgbEnabled then
             mainFrame.BorderColor3 = getRGBColor()
@@ -165,7 +143,7 @@ local function loadPaidScript()
     floatingCircle.Position = UDim2.new(0.02, 0, 0.85, 0)
     floatingCircle.BackgroundColor3 = Color3.new(1, 0.5, 0)
     floatingCircle.BackgroundTransparency = 0.2
-    floatingCircle.Text = "P"
+    floatingCircle.Text = "A"
     floatingCircle.TextColor3 = Color3.new(1, 1, 1)
     floatingCircle.TextSize = 28
     floatingCircle.TextScaled = true
@@ -183,15 +161,16 @@ local function loadPaidScript()
         return btn
     end
 
-    local espBtn = createButton("EspBtn", 45, "ESP: ON")
-    local aimBtn = createButton("AimBtn", 85, "AIMBOT: OFF")
-    local silentBtn = createButton("SilentBtn", 125, "SILENT AIM: OFF")
-    local flyBtn = createButton("FlyBtn", 165, "FLY: OFF")
-    local speedBtn = createButton("SpeedBtn", 205, "SPEED: OFF")
-    local antiBtn = createButton("AntiBtn", 245, "ANTI-AIM: OFF")
-    local dodgeBtn = createButton("DodgeBtn", 285, "BULLET DODGE: OFF")
-    local autoFireBtn = createButton("AutoFireBtn", 325, "AUTO FIRE: OFF")
-    local triggerBtn = createButton("TriggerBtn", 365, "TRIGGER BOT: OFF")
+    -- PAID VERSION HAS MORE BUTTONS
+    local espBtn = createButton("EspBtn", 35, "ESP: ON")
+    local aimBtn = createButton("AimBtn", 75, "AIMBOT: OFF")
+    local silentBtn = createButton("SilentBtn", 115, "SILENT AIM: OFF")
+    local flyBtn = createButton("FlyBtn", 155, "FLY: OFF")
+    local speedBtn = createButton("SpeedBtn", 195, "SPEED: OFF")
+    local antiBtn = createButton("AntiBtn", 235, "ANTI-AIM: OFF")
+    local dodgeBtn = createButton("DodgeBtn", 275, "BULLET DODGE: OFF")
+    local autoFireBtn = createButton("AutoFireBtn", 315, "AUTO FIRE: OFF")
+    local triggerBtn = createButton("TriggerBtn", 355, "TRIGGER BOT: OFF")
 
     espBtn.BackgroundColor3 = Color3.new(0.2, 0.8, 0.2)
 
@@ -204,7 +183,7 @@ local function loadPaidScript()
         return true
     end
 
-    -- VISIBILITY CHECK (OPEN AREA ONLY)
+    -- VISIBILITY (OPEN AREA ONLY)
     local function isVisible(enemy)
         local char = enemy.Character
         if not char or not char:FindFirstChild("Head") then return false end
@@ -257,7 +236,7 @@ local function loadPaidScript()
         end
     end
 
-    -- AIMBOT (ONLY OPEN AREA)
+    -- AIMBOT (OPEN AREA ONLY)
     local function getClosestVisibleEnemy()
         local closest = nil
         local shortestDist = 150
@@ -420,7 +399,7 @@ local function loadPaidScript()
         bulletDodge()
     end)
 
-    -- BUTTON HANDLERS (SAME AS FREE VERSION)
+    -- BUTTON HANDLERS
     espBtn.Activated:Connect(function()
         espEnabled = not espEnabled
         espBtn.Text = espEnabled and "ESP: ON" or "ESP: OFF"
@@ -448,22 +427,14 @@ local function loadPaidScript()
         flyEnabled = not flyEnabled
         flyBtn.Text = flyEnabled and "FLY: ON" or "FLY: OFF"
         flyBtn.BackgroundColor3 = flyEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
-        if flyEnabled then
-            enableFly()
-        else
-            disableFly()
-        end
+        if flyEnabled then enableFly() else disableFly() end
     end)
 
     speedBtn.Activated:Connect(function()
         speedEnabled = not speedEnabled
         speedBtn.Text = speedEnabled and "SPEED: ON" or "SPEED: OFF"
         speedBtn.BackgroundColor3 = speedEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
-        if speedEnabled then
-            setSpeed()
-        else
-            resetSpeed()
-        end
+        if speedEnabled then setSpeed() else resetSpeed() end
     end)
 
     antiBtn.Activated:Connect(function()
@@ -526,4 +497,18 @@ local function loadPaidScript()
     UserInputService.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.Touch then
             isDragging = false
-     
+        end
+    end)
+
+    local circleDragStart, circleStartPos, isCircleDragging
+    floatingCircle.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            isCircleDragging = true
+            circleDragStart = input.Position
+            circleStartPos = floatingCircle.Position
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if isCircleDragging and input.UserInputType == Enum.UserInputType.Touch then
+            local delta = input.Position - circleDragStart
+            floatingCircle.Position = UDim2.new(circleStartPos.X.S
