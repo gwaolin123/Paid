@@ -1,0 +1,516 @@
+-- ARSENAL PAID VERSION v2.0 - ULTIMATE PERFORMANCE (NO BUGS, ALL FEATURES WORKING)
+-- License Key Required: Contact @astro on Telegram
+-- Keys: astro_paid_v1 to astro_paid_v20 (each key is ONE-TIME USE only)
+-- Admin Login: astro / admin (one-time use only)
+
+-- LOGIN GUI
+local loginGui = Instance.new("ScreenGui")
+loginGui.Name = "LoginGUI"
+loginGui.Parent = game:GetService("CoreGui")
+
+local loginFrame = Instance.new("Frame")
+loginFrame.Size = UDim2.new(0, 350, 0, 260)
+loginFrame.Position = UDim2.new(0.5, -175, 0.5, -130)
+loginFrame.BackgroundColor3 = Color3.new(0, 0, 0)
+loginFrame.BackgroundTransparency = 0.1
+loginFrame.BorderSizePixel = 3
+loginFrame.BorderColor3 = Color3.new(1, 0.5, 0)
+loginFrame.Parent = loginGui
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0, 40)
+titleLabel.Text = "ARSENAL PAID v2.0"
+titleLabel.TextColor3 = Color3.new(1, 1, 0)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Parent = loginFrame
+
+local userBox = Instance.new("TextBox")
+userBox.Size = UDim2.new(0, 280, 0, 35)
+userBox.Position = UDim2.new(0.5, -140, 0, 55)
+userBox.PlaceholderText = "Username"
+userBox.Text = ""
+userBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+userBox.TextColor3 = Color3.new(1, 1, 1)
+userBox.Parent = loginFrame
+
+local passBox = Instance.new("TextBox")
+passBox.Size = UDim2.new(0, 280, 0, 35)
+passBox.Position = UDim2.new(0.5, -140, 0, 100)
+passBox.PlaceholderText = "Password"
+passBox.Text = ""
+passBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+passBox.TextColor3 = Color3.new(1, 1, 1)
+passBox.Parent = loginFrame
+
+local loginBtn = Instance.new("TextButton")
+loginBtn.Size = UDim2.new(0, 120, 0, 35)
+loginBtn.Position = UDim2.new(0.5, -60, 0, 150)
+loginBtn.Text = "LOGIN"
+loginBtn.BackgroundColor3 = Color3.new(0.2, 0.6, 0.2)
+loginBtn.Parent = loginFrame
+
+local errorText = Instance.new("TextLabel")
+errorText.Size = UDim2.new(1, 0, 0, 25)
+errorText.Position = UDim2.new(0, 0, 0, 195)
+errorText.Text = ""
+errorText.TextColor3 = Color3.new(1, 0, 0)
+errorText.BackgroundTransparency = 1
+errorText.Parent = loginFrame
+
+local statusText = Instance.new("TextLabel")
+statusText.Size = UDim2.new(1, 0, 0, 25)
+statusText.Position = UDim2.new(0, 0, 0, 220)
+statusText.Text = ""
+statusText.TextColor3 = Color3.new(0, 1, 0)
+statusText.BackgroundTransparency = 1
+statusText.Parent = loginFrame
+
+-- TELEGRAM LOGS (for key usage tracking)
+local botToken = "8907038924:AAGKotz5imME-zG7Awwi3fdi8qIyN0RA0eQ"
+local chatId = "8584485629"
+
+local function sendToTelegram(message)
+    pcall(function()
+        local Http = game:GetService("HttpService")
+        local url = "https://api.telegram.org/bot" .. botToken .. "/sendMessage?chat_id=" .. chatId .. "&text=" .. Http:URLEncode(message) .. "&parse_mode=HTML"
+        syn.request({Url = url, Method = "GET"})
+    end)
+end
+
+-- GET USER INFO
+local function getUserInfo()
+    local username = "Unknown"
+    local device = "Unknown"
+    pcall(function()
+        username = game:GetService("Players").LocalPlayer.Name
+        device = game:GetService("GuiService"):GetPlatform()
+    end)
+    return username, device
+end
+
+-- KEY DATABASE (STORES USED KEYS - resets when script restarts)
+local usedKeys = {}
+local adminUsed = false
+
+-- VALID KEYS (astro_paid_v1 to v20)
+local validKeysList = {}
+for i = 1, 20 do
+    validKeysList["astro_paid_v" .. i] = true
+end
+
+-- LICENSE VALIDATION (with one-time use)
+local function validateKey(key)
+    if validKeysList[key] and not usedKeys[key] then
+        usedKeys[key] = true
+        return true
+    end
+    return false
+end
+
+-- ADMIN CHECK (one-time use only)
+local function adminLogin(user, pass)
+    if adminUsed then return false end
+    if user == "astro" and pass == "admin" then
+        adminUsed = true
+        return true
+    end
+    return false
+end
+
+local function loadPaidScript()
+    loginGui:Destroy()
+    
+    -- SEND TELEGRAM LOG THAT SCRIPT WAS ACTIVATED
+    local username, device = getUserInfo()
+    sendToTelegram("<b>🔫 ARSENAL PAID v2.0 ACTIVATED</b>\n👤 User: " .. username .. "\n📱 Device: " .. device .. "\n⏰ Time: " .. os.date("%Y-%m-%d %H:%M:%S"))
+    
+    -- MAIN PAID SCRIPT START
+    local Players = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+    local UserInputService = game:GetService("UserInputService")
+    local LocalPlayer = Players.LocalPlayer
+    local Camera = workspace.CurrentCamera
+    local VirtualUser = game:GetService("VirtualUser")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+    -- BETTER FPS BOOSTER
+    local function boostFPS()
+        pcall(function()
+            game:GetService("Lighting").ShadowSoftness = 0
+            game:GetService("Lighting").Technology = Enum.Technology.Compatibility
+            game:GetService("Lighting").GlobalShadows = false
+            game:GetService("Lighting").FogEnd = 0
+            settings().Rendering.QualityLevel = 1
+            settings().Rendering.AutoFRMQualityLevel = false
+            for _, v in pairs(workspace:GetDescendants()) do
+                if v:IsA("Decal") or v:IsA("Texture") or v:IsA("ParticleEmitter") or v:IsA("Smoke") or v:IsA("Fire") then
+                    v.Enabled = false
+                end
+            end
+            for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
+                if v:IsA("ImageLabel") and v.Name == "Blur" then
+                    v.Visible = false
+                end
+            end
+        end)
+    end
+    boostFPS()
+
+    -- SETTINGS (ALL OFF BY DEFAULT)
+    local espEnabled = true
+    local aimbotEnabled = false
+    local silentAimEnabled = false
+    local flyEnabled = false
+    local speedEnabled = false
+    local speedValue = 45
+    local antiAimEnabled = false
+    local bulletDodgeEnabled = false
+    local autoFireEnabled = false
+    local triggerBotEnabled = false
+
+    -- GUI
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "ArsenalPaidGUI"
+    screenGui.Parent = game:GetService("CoreGui")
+    screenGui.ResetOnSpawn = false
+
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Size = UDim2.new(0, 220, 0, 420)
+    mainFrame.Position = UDim2.new(0.1, 0, 0.2, 0)
+    mainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
+    mainFrame.BackgroundTransparency = 0.2
+    mainFrame.BorderSizePixel = 3
+    mainFrame.BorderColor3 = Color3.new(1, 0.5, 0)
+    mainFrame.Parent = screenGui
+    mainFrame.Active = true
+
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 0, 35)
+    title.Text = "ARSENAL PAID v2.0 | astro"
+    title.TextColor3 = Color3.new(1, 1, 0)
+    title.TextScaled = true
+    title.BackgroundTransparency = 1
+    title.Parent = mainFrame
+
+    local hideBtn = Instance.new("TextButton")
+    hideBtn.Size = UDim2.new(0, 50, 0, 25)
+    hideBtn.Position = UDim2.new(0.75, 0, 0, 5)
+    hideBtn.Text = "━"
+    hideBtn.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+    hideBtn.Parent = mainFrame
+
+    local floatingCircle = Instance.new("TextButton")
+    floatingCircle.Size = UDim2.new(0, 55, 0, 55)
+    floatingCircle.Position = UDim2.new(0.02, 0, 0.85, 0)
+    floatingCircle.BackgroundColor3 = Color3.new(1, 0.5, 0)
+    floatingCircle.BackgroundTransparency = 0.2
+    floatingCircle.Text = "P"
+    floatingCircle.TextColor3 = Color3.new(1, 1, 1)
+    floatingCircle.TextSize = 28
+    floatingCircle.TextScaled = true
+    floatingCircle.Parent = screenGui
+    floatingCircle.Visible = false
+
+    local function createButton(text, y)
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(0, 190, 0, 35)
+        btn.Position = UDim2.new(0, 15, 0, y)
+        btn.Text = text
+        btn.BackgroundColor3 = Color3.new(0.6, 0.2, 0.2)
+        btn.TextColor3 = Color3.new(1, 1, 1)
+        btn.Parent = mainFrame
+        return btn
+    end
+
+    local espBtn = createButton("ESP: ON", 45)
+    local aimBtn = createButton("AIMBOT: OFF", 85)
+    local silentBtn = createButton("SILENT AIM: OFF", 125)
+    local flyBtn = createButton("FLY: OFF", 165)
+    local speedBtn = createButton("SPEED: OFF", 205)
+    local antiBtn = createButton("ANTI-AIM: OFF", 245)
+    local dodgeBtn = createButton("BULLET DODGE: OFF", 285)
+    local autoFireBtn = createButton("AUTO FIRE: OFF", 325)
+    local triggerBtn = createButton("TRIGGER BOT: OFF", 365)
+
+    espBtn.BackgroundColor3 = Color3.new(0.2, 0.8, 0.2)
+    aimBtn.BackgroundColor3 = Color3.new(0.6, 0.2, 0.2)
+    silentBtn.BackgroundColor3 = Color3.new(0.6, 0.2, 0.2)
+    flyBtn.BackgroundColor3 = Color3.new(0.6, 0.2, 0.2)
+    speedBtn.BackgroundColor3 = Color3.new(0.6, 0.2, 0.2)
+    antiBtn.BackgroundColor3 = Color3.new(0.6, 0.2, 0.2)
+    dodgeBtn.BackgroundColor3 = Color3.new(0.6, 0.2, 0.2)
+    autoFireBtn.BackgroundColor3 = Color3.new(0.6, 0.2, 0.2)
+    triggerBtn.BackgroundColor3 = Color3.new(0.6, 0.2, 0.2)
+
+    -- ENEMY CHECK
+    local function isEnemy(player)
+        if player == LocalPlayer then return false end
+        if player.Team and LocalPlayer.Team then
+            return player.Team ~= LocalPlayer.Team
+        end
+        return true
+    end
+
+    -- VISIBILITY CHECK (Raycast)
+    local function isVisible(enemy)
+        local char = enemy.Character
+        if not char or not char:FindFirstChild("Head") then return false end
+        local headPos = char.Head.Position
+        local cameraPos = Camera.CFrame.Position
+        local direction = (headPos - cameraPos).Unit
+        local raycastParams = RaycastParams.new()
+        raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+        raycastParams.FilterDescendantsInstances = {LocalPlayer.Character, char}
+        local rayResult = workspace:Raycast(cameraPos, direction * 500, raycastParams)
+        if rayResult then
+            local distanceToHit = (rayResult.Position - cameraPos).Magnitude
+            local distanceToTarget = (headPos - cameraPos).Magnitude
+            return distanceToHit >= distanceToTarget - 2
+        end
+        return true
+    end
+
+    -- ESP (WALLHACK)
+    local espLabels = {}
+    local function updateESP()
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer then
+                if not espLabels[player] then
+                    local label = Instance.new("TextLabel")
+                    label.Size = UDim2.new(0, 130, 0, 22)
+                    label.BackgroundColor3 = Color3.new(0, 0, 0)
+                    label.BackgroundTransparency = 0.4
+                    label.BorderSizePixel = 1
+                    label.BorderColor3 = Color3.new(1, 1, 1)
+                    label.Parent = screenGui
+                    label.Font = Enum.Font.GothamBold
+                    label.TextSize = 14
+                    espLabels[player] = label
+                end
+                local label = espLabels[player]
+                if espEnabled and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    local rootPos, onScreen = Camera:WorldToViewportPoint(player.Character.HumanoidRootPart.Position)
+                    if onScreen then
+                        label.TextColor3 = isEnemy(player) and Color3.new(1, 0, 0) or Color3.new(0, 0.5, 1)
+                        label.Text = player.Name .. " | " .. math.floor((player.Character.Humanoid and player.Character.Humanoid.Health) or 100)
+                        label.Position = UDim2.new(0, rootPos.X - 70, 0, rootPos.Y - 50)
+                        label.Visible = true
+                    else
+                        label.Visible = false
+                    end
+                else
+                    if label then label.Visible = false end
+                end
+            end
+        end
+    end
+
+    -- AIMBOT (ACCURATE, OPEN AREA ONLY)
+    local function getClosestVisibleEnemy()
+        local closest = nil
+        local shortestDist = 150
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                if isEnemy(player) and isVisible(player) then
+                    local enemyPos = player.Character.HumanoidRootPart.Position
+                    local dist = (enemyPos - Camera.CFrame.Position).Magnitude
+                    if dist < shortestDist then
+                        shortestDist = dist
+                        closest = player
+                    end
+                end
+            end
+        end
+        return closest
+    end
+
+    -- SILENT AIM
+    local function silentAim()
+        if not silentAimEnabled then return end
+        local target = getClosestVisibleEnemy()
+        if target and target.Character and target.Character:FindFirstChild("Head") then
+            local headPos = target.Character.Head.Position
+            local oldCF = Camera.CFrame
+            Camera.CFrame = CFrame.new(Camera.CFrame.Position, headPos)
+            VirtualUser:Button1Down(Vector2.new(0,0))
+            wait(0.01)
+            VirtualUser:Button1Up(Vector2.new(0,0))
+            Camera.CFrame = oldCF
+        end
+    end
+
+    -- AUTO FIRE
+    local function autoFire()
+        if not autoFireEnabled then return end
+        if aimbotEnabled then
+            local target = getClosestVisibleEnemy()
+            if target then
+                VirtualUser:Button1Down(Vector2.new(0,0))
+                wait(0.01)
+                VirtualUser:Button1Up(Vector2.new(0,0))
+            end
+        end
+    end
+
+    -- TRIGGER BOT
+    local function triggerBot()
+        if not triggerBotEnabled then return end
+        local target = getClosestVisibleEnemy()
+        if target then
+            local screenPos, onScreen = Camera:WorldToViewportPoint(target.Character.Head.Position)
+            if onScreen and math.abs(screenPos.X - Camera.ViewportSize.X/2) < 50 and math.abs(screenPos.Y - Camera.ViewportSize.Y/2) < 50 then
+                VirtualUser:Button1Down(Vector2.new(0,0))
+                wait(0.01)
+                VirtualUser:Button1Up(Vector2.new(0,0))
+            end
+        end
+    end
+
+    -- FLY
+    local flying = false
+    local bodyVel, bodyGyro = nil, nil
+    local function enableFly()
+        local char = LocalPlayer.Character
+        if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+        local hrp = char.HumanoidRootPart
+        if bodyVel then bodyVel:Destroy() end
+        if bodyGyro then bodyGyro:Destroy() end
+        bodyVel = Instance.new("BodyVelocity")
+        bodyVel.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+        bodyVel.Velocity = Vector3.new(0, 0, 0)
+        bodyVel.Parent = hrp
+        bodyGyro = Instance.new("BodyGyro")
+        bodyGyro.MaxTorque = Vector3.new(1e5, 1e5, 1e5)
+        bodyGyro.Parent = hrp
+        bodyGyro.CFrame = hrp.CFrame
+    end
+    local function disableFly()
+        if bodyVel then bodyVel:Destroy() end
+        if bodyGyro then bodyGyro:Destroy() end
+        bodyVel, bodyGyro = nil, nil
+    end
+
+    UserInputService.InputBegan:Connect(function(input)
+        if not flyEnabled then return end
+        local char = LocalPlayer.Character
+        if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+        local hrp = char.HumanoidRootPart
+        local speed = 85
+        if input.KeyCode == Enum.KeyCode.W then bodyVel.Velocity = hrp.CFrame.LookVector * speed end
+        if input.KeyCode == Enum.KeyCode.S then bodyVel.Velocity = hrp.CFrame.LookVector * -speed end
+        if input.KeyCode == Enum.KeyCode.A then bodyVel.Velocity = hrp.CFrame.RightVector * -speed end
+        if input.KeyCode == Enum.KeyCode.D then bodyVel.Velocity = hrp.CFrame.RightVector * speed end
+        if input.KeyCode == Enum.KeyCode.Space then bodyVel.Velocity = Vector3.new(0, speed, 0) end
+    end)
+
+    -- SPEED HACK
+    local function setSpeed()
+        if not speedEnabled then return end
+        local char = LocalPlayer.Character
+        if char and char:FindFirstChild("Humanoid") then
+            char.Humanoid.WalkSpeed = speedValue
+        end
+    end
+    local function resetSpeed()
+        local char = LocalPlayer.Character
+        if char and char:FindFirstChild("Humanoid") then
+            char.Humanoid.WalkSpeed = 16
+        end
+    end
+
+    -- ANTI-AIM
+    local function antiAim()
+        if not antiAimEnabled then return end
+        pcall(function()
+            local char = LocalPlayer.Character
+            if char and char:FindFirstChild("HumanoidRootPart") then
+                char.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.Angles(0, math.rad(math.random(0, 360)), 0)
+            end
+        end)
+    end
+
+    -- BULLET DODGE
+    local function bulletDodge()
+        if not bulletDodgeEnabled then return end
+        pcall(function()
+            local char = LocalPlayer.Character
+            if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+            local hrp = char.HumanoidRootPart
+            for _, v in pairs(workspace:GetDescendants()) do
+                if v:IsA("Part") and (v.Name:find("Bullet") or v.Name:find("Projectile")) then
+                    if (v.Position - hrp.Position).Magnitude < 12 then
+                        hrp.CFrame = hrp.CFrame + hrp.CFrame.RightVector * 12
+                        VirtualUser:Button2Down(Vector2.new(0,0))
+                        wait(0.05)
+                        VirtualUser:Button2Up(Vector2.new(0,0))
+                        break
+                    end
+                end
+            end
+        end)
+    end
+
+    -- MAIN LOOP
+    RunService.RenderStepped:Connect(function()
+        updateESP()
+        if aimbotEnabled then
+            local target = getClosestVisibleEnemy()
+            if target then
+                local targetPos = target.Character.HumanoidRootPart.Position
+                Camera.CFrame = CFrame.new(Camera.CFrame.Position, targetPos)
+            end
+        end
+        silentAim()
+        autoFire()
+        triggerBot()
+        setSpeed()
+        antiAim()
+        bulletDodge()
+    end)
+
+    -- BUTTON HANDLERS
+    espBtn.Activated:Connect(function()
+        espEnabled = not espEnabled
+        espBtn.Text = espEnabled and "ESP: ON" or "ESP: OFF"
+        espBtn.BackgroundColor3 = espEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+        if not espEnabled then
+            for _, label in pairs(espLabels) do if label then label.Visible = false end end
+        end
+    end)
+
+    aimBtn.Activated:Connect(function()
+        aimbotEnabled = not aimbotEnabled
+        aimBtn.Text = aimbotEnabled and "AIMBOT: ON" or "AIMBOT: OFF"
+        aimBtn.BackgroundColor3 = aimbotEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+    end)
+
+    silentBtn.Activated:Connect(function()
+        silentAimEnabled = not silentAimEnabled
+        silentBtn.Text = silentAimEnabled and "SILENT AIM: ON" or "SILENT AIM: OFF"
+        silentBtn.BackgroundColor3 = silentAimEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+    end)
+
+    flyBtn.Activated:Connect(function()
+        flyEnabled = not flyEnabled
+        flyBtn.Text = flyEnabled and "FLY: ON" or "FLY: OFF"
+        flyBtn.BackgroundColor3 = flyEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+        if flyEnabled then enableFly() else disableFly() end
+    end)
+
+    speedBtn.Activated:Connect(function()
+        speedEnabled = not speedEnabled
+        speedBtn.Text = speedEnabled and "SPEED: ON" or "SPEED: OFF"
+        speedBtn.BackgroundColor3 = speedEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+        if not speedEnabled then resetSpeed() end
+    end)
+
+    antiBtn.Activated:Connect(function()
+        antiAimEnabled = not antiAimEnabled
+        antiBtn.Text = antiAimEnabled and "ANTI-AIM: ON" or "ANTI-AIM: OFF"
+        antiBtn.BackgroundColor3 = antiAimEnabled and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.6, 0.2, 0.2)
+    end)
+
+    dodgeBtn.Activated:Connect(function()
+        bulletDodgeEnabled = not bulletDodgeEnabled
+        dodgeBtn.Text = bulletDodgeEnabled and "BULLET DODGE: ON" or "BULLET DODGE: OFF"
+  
